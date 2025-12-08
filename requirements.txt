@@ -1,0 +1,4 @@
+chromadb
+psycopg2-binary
+numpy
+psutil

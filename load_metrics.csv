@@ -1,0 +1,2 @@
+timestamp,n_vectors,dimension,collection_name,table_name,chroma_load_time_sec,chroma_total_size_mb,chroma_delta_size_mb,pg_load_time_sec,pg_total_size_mb,pg_delta_size_mb
+2025-12-08T10:00:23.547547,1000,128,items_128d,items,0.270131,1.6992,1.5391,2.508255,0.6328,0.6172
