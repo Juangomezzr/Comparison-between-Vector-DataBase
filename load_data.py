@@ -11,7 +11,7 @@ import psycopg2
 # ---------- CONFIG ----------
 
 DIM = 128              # vector dimension
-N_VECTORS = 1000       # adjust as needed (small/medium/large)
+N_VECTORS = 10000       # adjust as needed (small/medium/large)
 CHROMA_PATH = "./chroma-data"
 CHROMA_COLLECTION = "items_128d"
 PG_TABLE = "items"
