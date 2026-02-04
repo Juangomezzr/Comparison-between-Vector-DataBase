@@ -11,11 +11,11 @@ import psycopg2
 # ---------- CONFIG ----------
 
 DIM = 128              # vector dimension
-N_VECTORS = 10000       # adjust as needed (small/medium/large)
+N_VECTORS = 300000       # adjust as needed (small/medium/large)
 CHROMA_PATH = "./chroma-data"
 CHROMA_COLLECTION = "items_128d"
 PG_TABLE = "items"
-METRICS_FILE = "load_metrics.csv"
+METRICS_FILE = "load_metrics_large.csv"
 
 # Chroma client
 chroma_client = chromadb.HttpClient(host="localhost", port=8000)
@@ -89,21 +89,30 @@ def generate_vectors(n, dim):
 
 # ---------- LOAD INTO CHROMA ----------
 
-def load_into_chroma(collection_name, vectors, categories):
+def load_into_chroma(collection_name, vectors, categories, batch_size=1000):
     collection = chroma_client.get_or_create_collection(name=collection_name)
 
-    ids = [f"{collection_name}_{i}" for i in range(len(vectors))]
-    metadatas = [{"category": c} for c in categories]
-
+    n = len(vectors)
     t0 = time.time()
-    collection.add(
-        ids=ids,
-        embeddings=vectors.tolist(),
-        metadatas=metadatas
-    )
-    t1 = time.time()
 
+    for start in range(0, n, batch_size):
+        end = min(start + batch_size, n)
+
+        batch_vectors = vectors[start:end]
+        batch_cats = categories[start:end]
+
+        ids = [f"{collection_name}_{i}" for i in range(start, end)]
+        metadatas = [{"category": c} for c in batch_cats]
+
+        collection.add(
+            ids=ids,
+            embeddings=batch_vectors.tolist(),
+            metadatas=metadatas
+        )
+
+    t1 = time.time()
     load_time = t1 - t0
+    print(f"[Chroma] Loaded {n} vectors in {load_time:.4f} seconds (batch_size={batch_size})")
     return load_time
 
 
@@ -143,7 +152,7 @@ if __name__ == "__main__":
 
     # ---- Chroma load ----
     print("Loading into Chroma...")
-    chroma_load_time = load_into_chroma(CHROMA_COLLECTION, vectors, cats)
+    chroma_load_time = load_into_chroma(CHROMA_COLLECTION, vectors, cats,5000)
     chroma_size_after = get_folder_size_bytes(CHROMA_PATH)
 
     # ---- pgvector load ----

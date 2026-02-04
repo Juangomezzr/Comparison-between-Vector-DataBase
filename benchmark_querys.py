@@ -21,10 +21,10 @@ N_QUERIES = 100
 CHROMA_COLLECTION = "items_128d"
 PG_TABLE = "items"
 
-SUMMARY_CSV = "query_metrics_summary.csv"
-DETAIL_CSV = "query_metrics_detail.csv"
+SUMMARY_CSV = "query_metrics_summary_large.csv"
+DETAIL_CSV = "query_metrics_detail_large.csv"
 
-DATASET_LABEL = "TEST_1000"   # Cambiar a SMALL / MEDIUM / LARGE en tus pruebas
+DATASET_LABEL = "large_300000"   # Cambiar a SMALL / MEDIUM / LARGE en tus pruebas
 
 
 # ======================================================
